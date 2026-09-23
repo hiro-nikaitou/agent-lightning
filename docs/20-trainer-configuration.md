@@ -200,6 +200,8 @@ agentlightning:
 
 `actor_rollout_ref.actor.policy_loss.loss_mode: per_rollout_mean` normalizes the policy loss at the rollout level. It prevents a rollout from receiving more optimization weight only because it produced more training rows.
 
+Rows that belong to the same rollout share one token denominator, and each row is additionally divided by the number of rows in the trained batch. That second divisor is the inverse of the extra PPO mini-batch update units those rows produce, so the two cancel at the update level: splitting one rollout across more rows, for example by switching `agentlightning.trace_aggregator.level`, adds proportional update units without changing the rollout's effective optimization weight.
+
 For the motivation and detailed formulation of rollout-level advantage and loss normalization, see the [Agent Lightning v1.0 technical report](https://arxiv.org/pdf/2608.17528).
 
 ### Maximum PPO update times
